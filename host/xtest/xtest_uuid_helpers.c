@@ -82,6 +82,27 @@ out:
 	return res;
 }
 
+#define UUID_STR_LEN	37
+
+TEEC_Result xtest_uuid_to_str(char **s, const TEEC_UUID *uuid)
+{
+	TEEC_Result res = TEEC_SUCCESS;
+
+	*s = (char*)malloc(UUID_STR_LEN);
+	if (!*s) {
+		res = TEEC_ERROR_OUT_OF_MEMORY;
+		goto out;
+	}
+	sprintf(*s, "%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x", uuid->timeLow,
+		uuid->timeMid, uuid->timeHiAndVersion, uuid->clockSeqAndNode[0],
+		uuid->clockSeqAndNode[1], uuid->clockSeqAndNode[2],
+		uuid->clockSeqAndNode[3], uuid->clockSeqAndNode[4],
+		uuid->clockSeqAndNode[5], uuid->clockSeqAndNode[6],
+		uuid->clockSeqAndNode[7]);
+out:
+	return res;
+}
+
 #ifdef OPENSSL_FOUND
 TEEC_Result xtest_uuid_v5(TEEC_UUID *uuid, const TEEC_UUID *ns,
 			  const void *name, size_t size)
